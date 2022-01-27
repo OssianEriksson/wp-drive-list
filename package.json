@@ -6,10 +6,10 @@
 	"scripts": {
 		"start:env": "wp-env start",
 		"stop:env": "wp-env stop",
-		"start:scripts": "wp-scripts start src/*/*/*.jsx",
+		"start:scripts": "wp-scripts start src/*/*/*.tsx",
 		"start": "trap 'npm run stop' INT; npm run start:env && npm run start:scripts",
 		"stop": "npm run stop:env",
-		"build:scripts": "wp-scripts build src/*/*/*.jsx",
+		"build:scripts": "wp-scripts build src/*/*/*.tsx",
 		"build:lang:mo": "( cd languages && rm -f *.mo && find . -name '*.po' -print -exec sh -c 'msgfmt -o $(basename {} .po).mo {}' \\; )",
 		"build:lang:json": "rm -f languages/wp-drive-list-*-*.json && vendor/bin/wp i18n make-json languages/ --no-purge",
 		"build:lang": "npm run build:lang:mo & npm run build:lang:json & wait",
@@ -27,7 +27,9 @@
 	},
 	"prettier": "@wordpress/prettier-config",
 	"devDependencies": {
+		"@wordpress/element": "^4.1.0",
 		"@wordpress/env": "^4.2.0",
+		"@wordpress/i18n": "^4.3.0",
 		"@wordpress/scripts": "^20.0.0"
 	}
 }

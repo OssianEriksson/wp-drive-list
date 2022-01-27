@@ -38,6 +38,9 @@ if ( ! defined( 'WPINC' ) ) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+define( __NAMESPACE__ . '\PLUGIN_FILE', __FILE__ );
+define( __NAMESPACE__ . '\PLUGIN_ROOT', dirname( PLUGIN_FILE ) );
+
 /**
  * Checks if $haystack starts with $needle
  *
@@ -74,14 +77,11 @@ function resolve_path( string $path ): string {
  * Loads the plugin's translated strings
  */
 function load_translations() {
-	load_plugin_textdomain(
-		'wp-drive-list',
-		false,
-		dirname( plugin_basename( __FILE__ ) ) . '/languages'
-	);
+	$plugin_rel_path = plugin_basename( PLUGIN_ROOT ) . '/languages';
+	load_plugin_textdomain( 'wp-drive-list', false, $plugin_rel_path );
 }
 
-add_action( 'init', 'Ftek\WPDriveList\load_translations' );
+add_action( 'init', __NAMESPACE__ . '\load_translations' );
 
 /*
 This is neccessary since i18n translations of JavaScript is done by finding
@@ -102,7 +102,7 @@ would cause the entirety of `src/../builds/myScript.js` to get hashed instead
 of just `builds/myScript.js` which is what `wp i18n make-json` generates md5
 hashes for.
 */
-add_filter( 'load_script_textdomain_relative_path', 'Ftek\WPDriveList\resolve_path' );
+add_filter( 'load_script_textdomain_relative_path', __NAMESPACE__ . '\resolve_path' );
 
 $settings = new Settings();
 
@@ -113,4 +113,4 @@ function clean() {
 	Settings::clean();
 }
 
-register_uninstall_hook( __FILE__, 'clean' );
+register_uninstall_hook( PLUGIN_FILE, 'clean' );

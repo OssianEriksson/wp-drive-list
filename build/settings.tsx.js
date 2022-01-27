@@ -1,0 +1,1 @@
+!function(){"use strict";var e=window.wp.element,t=window.wp.i18n;const n=()=>(0,e.createElement)(e.Fragment,null,(0,e.createElement)("h1",null,(0,t.__)("WP Drive List Settings","wp-drive-list")));document.addEventListener("DOMContentLoaded",(()=>{const t=document.getElementById("wp_drive_list_settings");t&&(0,e.render)((0,e.createElement)(n,null),t)}))}();

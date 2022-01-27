@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Drive List 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-drive-list\n"
-"POT-Creation-Date: 2022-01-27T19:07:20+00:00\n"
+"POT-Creation-Date: 2022-01-27T23:19:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ossian Eriksson\n"
 "Language-Team: Svenska\n"
@@ -31,17 +31,17 @@ msgstr ""
 msgid "https://github.com/OssianEriksson"
 msgstr ""
 
-#: includes/class-settings.php:45 includes/class-settings.php:46
+#: includes/class-settings.php:74 includes/class-settings.php:75
 #: build/settings.tsx.js:1
 msgid "WP Drive List Settings"
 msgstr "Inställningar för WP Drivelista"
 
-#: includes/class-settings.php:88
+#: includes/class-settings.php:129
 msgid "API key"
 msgstr "API-nyckel"
 
 #. translators: %1$s and %2$s are replaced with anchor attributes.
-#: includes/class-settings.php:96
+#: includes/class-settings.php:137
 msgid ""
 "This plugin requires an API key from Google in order to function. "
 "Instructions for creating an API key as a Google Workspace admin are "
@@ -53,6 +53,22 @@ msgstr ""
 "finns tillgängliga i <a %1$s>Googles dokumentation</a>. Läs också om hur du "
 "kan <a %2$s>säkra din API-nyckel</a>."
 
-#: includes/class-settings.php:123
+#: includes/class-settings.php:164
 msgid "Settings"
 msgstr "Inställningar"
+
+#: build/settings.tsx.js:1
+msgid "The following error has occurred:"
+msgstr "Följande fel har inträffat:"
+
+#: build/settings.tsx.js:1
+msgid "Google API key"
+msgstr "Google API-nyckel"
+
+#: build/settings.tsx.js:1
+msgid "Settings saved."
+msgstr "Inställningarna sparade."
+
+#: build/settings.tsx.js:1
+msgid "Save changes"
+msgstr "Spara ändringar"

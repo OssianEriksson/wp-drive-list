@@ -27,9 +27,13 @@
 	},
 	"prettier": "@wordpress/prettier-config",
 	"devDependencies": {
+		"@wordpress/api-fetch": "^6.0.0",
+		"@wordpress/components": "^19.3.0",
+		"@wordpress/data": "^6.2.0",
 		"@wordpress/element": "^4.1.0",
 		"@wordpress/env": "^4.2.0",
 		"@wordpress/i18n": "^4.3.0",
+		"@wordpress/notices": "^3.3.0",
 		"@wordpress/scripts": "^20.0.0"
 	}
 }

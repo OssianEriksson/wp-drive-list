@@ -32,8 +32,37 @@ class Settings {
 	 * Settings constructor
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'add_settings' ) );
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_filter( 'plugin_action_links_wp-drive-list/wp-drive-list.php', array( $this, 'add_settings_action_link' ) );
+	}
+
+	/**
+	 * Adds plugin settings using the WordPress Settings API
+	 */
+	public function add_settings(): void {
+		register_setting(
+			'wp_drive_list_option_group',
+			'wp_drive_list_option',
+			array(
+				'single'       => true,
+				'show_in_rest' => array(
+					'schema' => array(
+						'type'       => 'object',
+						'required'   => true,
+						'properties' => array(
+							'api_key' => array(
+								'type'     => 'string',
+								'required' => true,
+							),
+						),
+					),
+				),
+				'default'      => array(
+					'api_key' => '',
+				),
+			)
+		);
 	}
 
 	/**
@@ -50,32 +79,44 @@ class Settings {
 				?>
 				<div id="wp_drive_list_settings" class="wrap"></div>
 				<?php
-
-				$asset = require PLUGIN_ROOT . '/build/settings.tsx.asset.php';
-				wp_enqueue_script(
-					'wp_drive_list_script_settings',
-					plugins_url( '/build/settings.tsx.js', PLUGIN_FILE ),
-					$asset['dependencies'],
-					$asset['version'],
-					true
-				);
-				wp_set_script_translations(
-					'wp_drive_list_script_settings',
-					'wp-drive-list',
-					PLUGIN_ROOT . '/languages'
-				);
-				wp_enqueue_style(
-					'wp_drive_list_style_settings',
-					plugins_url( '/build/settings.tsx.css', PLUGIN_FILE ),
-					array( 'wp-components' ),
-					$asset['version']
-				);
 			}
 		);
 
 		if ( $settings_page ) {
-			add_action( 'load-' . $settings_page, array( $this, 'add_settings_help' ) );
+			add_action(
+				'load-' . $settings_page,
+				function(): void {
+					$this->add_settings_help();
+
+					add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_settings_page_scripts' ) );
+				}
+			);
 		}
+	}
+
+	/**
+	 * Enqueues scripts and styles needed on the settings page
+	 */
+	public function enqueue_settings_page_scripts(): void {
+		$asset = require PLUGIN_ROOT . '/build/settings.tsx.asset.php';
+		wp_enqueue_style(
+			'wp-drive-list-settings',
+			plugins_url( '/build/settings.tsx.css', PLUGIN_FILE ),
+			array( 'wp-components' ),
+			$asset['version']
+		);
+		wp_enqueue_script(
+			'wp-drive-list-settings',
+			plugins_url( '/build/settings.tsx.js', PLUGIN_FILE ),
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
+		wp_set_script_translations(
+			'wp-drive-list-settings',
+			'wp-drive-list',
+			PLUGIN_ROOT . '/languages'
+		);
 	}
 
 	/**
@@ -131,6 +172,6 @@ class Settings {
 	 * Removes persistant data
 	 */
 	public static function clean(): void {
-
+		delete_option( 'wp_drive_list_option' );
 	}
 }

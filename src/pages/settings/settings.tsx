@@ -16,14 +16,111 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { render } from '@wordpress/element';
+import { render, useState, useEffect } from '@wordpress/element';
+import {
+	Placeholder,
+	Spinner,
+	TextControl,
+	Button,
+	SnackbarList,
+} from '@wordpress/components';
+import { store as noticesStore } from '@wordpress/notices';
 import { __ } from '@wordpress/i18n';
+import { useDispatch, useSelect } from '@wordpress/data';
+import apiFetch from '@wordpress/api-fetch';
 
 import './settings.scss';
+
+type Option = {
+	api_key: string;
+};
+
+const ErrorDisplay = (error: any): JSX.Element => (
+	<>
+		{__('The following error has occurred:', 'wp-drive-list')}
+		<pre className="error">{JSON.stringify(error, null, 4)}</pre>
+	</>
+);
+
+const NoticeBar = (): JSX.Element => {
+	const notices = useSelect((select) =>
+		select(noticesStore).getNotices()
+	).filter((notice) => notice.type === 'snackbar');
+	const { removeNotice } = useDispatch(noticesStore);
+	return <SnackbarList notices={notices} onRemove={removeNotice} />;
+};
+
+const SpinnerPlaceholder = (): JSX.Element => (
+	<Placeholder>
+		<div className="placeholder-center">
+			<Spinner />
+		</div>
+	</Placeholder>
+);
+
+const SettingsContent = (): JSX.Element => {
+	const [error, setError] = useState<unknown>(null);
+	const [option, setOption] = useState<Option | null>(null);
+	useEffect(() => {
+		apiFetch({ path: '/wp/v2/settings' })
+			.then((response) => {
+				const settings = response as { wp_drive_list_option?: Option };
+				setOption(settings?.wp_drive_list_option);
+			})
+			.catch((reason) => setError(reason));
+	}, []);
+
+	const { createNotice } = useDispatch(noticesStore);
+
+	if (error) {
+		return <ErrorDisplay error={error} />;
+	}
+
+	if (!option) {
+		return <SpinnerPlaceholder />;
+	}
+
+	const save = () => {
+		apiFetch({
+			path: '/wp/v2/settings',
+			method: 'POST',
+			data: { wp_drive_list_option: option },
+		})
+			.then(() =>
+				createNotice(
+					'success',
+					__('Settings saved.', 'wp-drive-list'),
+					{ type: 'snackbar' }
+				)
+			)
+			.catch((reason) =>
+				createNotice(
+					'error',
+					reason?.message || JSON.stringify(reason),
+					{ type: 'snackbar' }
+				)
+			);
+	};
+
+	return (
+		<>
+			<TextControl
+				label={__('Google API key', 'wp-drive-list')}
+				value={option.api_key}
+				onChange={(value) => setOption({ ...option, api_key: value })}
+			/>
+			<Button onClick={save} isPrimary>
+				{__('Save changes', 'wp-drive-list')}
+			</Button>
+		</>
+	);
+};
 
 const SettingsPage = (): JSX.Element => (
 	<>
 		<h1>{__('WP Drive List Settings', 'wp-drive-list')}</h1>
+		<SettingsContent />
+		<NoticeBar />
 	</>
 );
 

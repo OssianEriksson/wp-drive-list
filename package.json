@@ -1,0 +1,33 @@
+{
+	"name": "wp-drive-list",
+	"author": "Ossian Eriksson",
+	"license": "GPL-3.0",
+	"private": true,
+	"scripts": {
+		"start:env": "wp-env start",
+		"stop:env": "wp-env stop",
+		"start:scripts": "wp-scripts start src/*/*/*.jsx",
+		"start": "trap 'npm run stop' INT; npm run start:env && npm run start:scripts",
+		"stop": "npm run stop:env",
+		"build:scripts": "wp-scripts build src/*/*/*.jsx",
+		"build:lang:mo": "( cd languages && rm -f *.mo && find . -name '*.po' -print -exec sh -c 'msgfmt -o $(basename {} .po).mo {}' \\; )",
+		"build:lang:json": "rm -f languages/wp-drive-list-*-*.json && vendor/bin/wp i18n make-json languages/ --no-purge",
+		"build:lang": "npm run build:lang:mo & npm run build:lang:json & wait",
+		"build": "npm run build:scripts & npm run build:lang & wait",
+		"lint:style": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"lint:php": "vendor/bin/phpcs --ignore=vendor/,node_modules/,build/ --extensions=php --standard=Wordpress .",
+		"lint": "npm run lint:style; npm run lint:js; npm run lint:php",
+		"format:scripts": "wp-scripts format",
+		"format:php": "vendor/bin/phpcbf --ignore=vendor/,node_modules/,build/ --extensions=php --standard=Wordpress .",
+		"format": "npm run format:scripts; npm run format:php",
+		"lang:pot": "vendor/bin/wp i18n make-pot . languages/wp-drive-list.pot",
+		"lang:po": "( cd languages && find . -name '*.po' -print -exec msgmerge -U --backup=none {} wp-drive-list.pot \\; )",
+		"lang": "npm run lang:pot && npm run lang:po"
+	},
+	"prettier": "@wordpress/prettier-config",
+	"devDependencies": {
+		"@wordpress/env": "^4.2.0",
+		"@wordpress/scripts": "^20.0.0"
+	}
+}

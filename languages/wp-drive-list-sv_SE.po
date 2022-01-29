@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Drive List 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-drive-list\n"
-"POT-Creation-Date: 2022-01-27T23:19:27+00:00\n"
+"POT-Creation-Date: 2022-01-29T01:00:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ossian Eriksson\n"
 "Language-Team: Svenska\n"
@@ -31,44 +31,83 @@ msgstr ""
 msgid "https://github.com/OssianEriksson"
 msgstr ""
 
-#: includes/class-settings.php:74 includes/class-settings.php:75
-#: build/settings.tsx.js:1
+#: includes/class-drive-list-block.php:85 build/drive-list-editor.tsx.js:190
+msgid "No files to display"
+msgstr "Inga filer att visa"
+
+#: includes/class-settings.php:87 includes/class-settings.php:88
+#: build/settings.tsx.js:262
 msgid "WP Drive List Settings"
 msgstr "Inställningar för WP Drivelista"
 
-#: includes/class-settings.php:129
+#: includes/class-settings.php:142
 msgid "API key"
 msgstr "API-nyckel"
 
-#. translators: %1$s and %2$s are replaced with anchor attributes.
-#: includes/class-settings.php:137
+#. translators: %1$s, %2$s and %3$s are replaced with anchor attributes.
+#: includes/class-settings.php:150
 msgid ""
 "This plugin requires an API key from Google in order to function. "
 "Instructions for creating an API key as a Google Workspace admin are "
 "available in <a %1$s>Google's documentation</a>. Also read about <a "
-"%2$s>securing your API key</a>."
+"%2$s>securing your API key</a>. Then make sure to <a %3$s>enable the Google "
+"Drive API</a> for your project."
 msgstr ""
 "Detta plugin kräver en API-nyckel från Google för att fungera. Instruktioner "
 "för hur du kan skapa en API-nyckel som som en Google Workspace-administratör "
 "finns tillgängliga i <a %1$s>Googles dokumentation</a>. Läs också om hur du "
-"kan <a %2$s>säkra din API-nyckel</a>."
+"kan <a %2$s>säkra din API-nyckel</a>. Se sedan till att <a %3$s>slå på "
+"Google-API:t</a> för ditt projekt."
 
-#: includes/class-settings.php:164
+#: includes/class-settings.php:178
 msgid "Settings"
 msgstr "Inställningar"
 
-#: build/settings.tsx.js:1
+#: build/drive-list-editor.tsx.js:210
+msgid "Basic settings"
+msgstr "Grundläggande inställningar"
+
+#: build/drive-list-editor.tsx.js:213
+msgid "Shared folder URL"
+msgstr "URL till delad mapp"
+
+#: build/settings.tsx.js:192
 msgid "The following error has occurred:"
 msgstr "Följande fel har inträffat:"
 
-#: build/settings.tsx.js:1
-msgid "Google API key"
-msgstr "Google API-nyckel"
-
-#: build/settings.tsx.js:1
+#: build/settings.tsx.js:243
 msgid "Settings saved."
 msgstr "Inställningarna sparade."
 
-#: build/settings.tsx.js:1
+#: build/settings.tsx.js:251
+msgid "Google API key"
+msgstr "Google API-nyckel"
+
+#: build/settings.tsx.js:259
 msgid "Save changes"
 msgstr "Spara ändringar"
+
+#: build/blocks/drive-list/block.json src/blocks/drive-list/block.json
+msgctxt "block title"
+msgid "Drive list"
+msgstr "Drivelista"
+
+#: build/blocks/drive-list/block.json src/blocks/drive-list/block.json
+msgctxt "block description"
+msgid "Lists files in a shared Google Drive folder"
+msgstr "Listar filer i en delad Google Drive-mapp"
+
+#: build/blocks/drive-list/block.json src/blocks/drive-list/block.json
+msgctxt "block keyword"
+msgid "drive"
+msgstr ""
+
+#: build/blocks/drive-list/block.json src/blocks/drive-list/block.json
+msgctxt "block keyword"
+msgid "google"
+msgstr ""
+
+#: build/blocks/drive-list/block.json src/blocks/drive-list/block.json
+msgctxt "block keyword"
+msgid "file"
+msgstr "fil"

@@ -104,7 +104,8 @@ hashes for.
 */
 add_filter( 'load_script_textdomain_relative_path', __NAMESPACE__ . '\resolve_path' );
 
-$settings = new Settings();
+$settings   = new Settings();
+$drive_list = new Drive_List_Block( $settings );
 
 /**
  * Removes persistant data

@@ -35,6 +35,10 @@ type Option = {
 	api_key: string;
 };
 
+type SettingsObject = {
+	wp_drive_list_option?: Option;
+};
+
 const ErrorDisplay = (error: any): JSX.Element => (
 	<>
 		{__('The following error has occurred:', 'wp-drive-list')}
@@ -60,11 +64,11 @@ const SpinnerPlaceholder = (): JSX.Element => (
 
 const SettingsContent = (): JSX.Element => {
 	const [error, setError] = useState<unknown>(null);
-	const [option, setOption] = useState<Option | null>(null);
+	const [option, setOption] = useState<Option>(null);
 	useEffect(() => {
 		apiFetch({ path: '/wp/v2/settings' })
 			.then((response) => {
-				const settings = response as { wp_drive_list_option?: Option };
+				const settings = response as SettingsObject;
 				setOption(settings?.wp_drive_list_option);
 			})
 			.catch((reason) => setError(reason));
@@ -107,7 +111,9 @@ const SettingsContent = (): JSX.Element => {
 			<TextControl
 				label={__('Google API key', 'wp-drive-list')}
 				value={option.api_key}
-				onChange={(value) => setOption({ ...option, api_key: value })}
+				onChange={(value: string) =>
+					setOption({ ...option, api_key: value })
+				}
 			/>
 			<Button onClick={save} isPrimary>
 				{__('Save changes', 'wp-drive-list')}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Class for plugin settings management
+ * Handles plugin settings
  *
  * WP Drive List
  * Copyright (C) 2022  Ossian Eriksson
@@ -24,12 +24,16 @@
 namespace Ftek\WPDriveList;
 
 /**
- * Class for plugin settings management
+ * Handles plugin settings
  */
 class Settings {
 
+	const DEFAULT_SETTINGS = array(
+		'api_key' => '',
+	);
+
 	/**
-	 * Settings constructor
+	 * Default constructor
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'add_settings' ) );
@@ -58,11 +62,20 @@ class Settings {
 						),
 					),
 				),
-				'default'      => array(
-					'api_key' => '',
-				),
+				'default'      => self::DEFAULT_SETTINGS,
 			)
 		);
+	}
+
+	/**
+	 * Returns setting values
+	 *
+	 * @param ?string $key Key of requested setting or null for the entire
+	 *                     setting array.
+	 */
+	public function get( ?string $key ) {
+		$option = array_merge( self::DEFAULT_SETTINGS, get_option( 'wp_drive_list_option' ) );
+		return null === $key ? $option : $option[ $key ];
 	}
 
 	/**
@@ -133,10 +146,11 @@ class Settings {
 					<p>
 						<?php
 						printf(
-							// translators: %1$s and %2$s are replaced with anchor attributes.
-							__( 'This plugin requires an API key from Google in order to function. Instructions for creating an API key as a Google Workspace admin are available in <a %1$s>Google\'s documentation</a>. Also read about <a %2$s>securing your API key</a>.', 'wp-drive-list' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							// translators: %1$s, %2$s and %3$s are replaced with anchor attributes.
+							__( 'This plugin requires an API key from Google in order to function. Instructions for creating an API key as a Google Workspace admin are available in <a %1$s>Google\'s documentation</a>. Also read about <a %2$s>securing your API key</a>. Then make sure to <a %3$s>enable the Google Drive API</a> for your project.', 'wp-drive-list' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							'href="https://cloud.google.com/docs/authentication/api-keys#creating_an_api_key" target="blank" rel="noopener noreferrer"',
-							'href="https://cloud.google.com/docs/authentication/api-keys#securing_an_api_key" target="blank" rel="noopener noreferrer"'
+							'href="https://cloud.google.com/docs/authentication/api-keys#securing_an_api_key" target="blank" rel="noopener noreferrer"',
+							'href="https://console.developers.google.com/apis/api/drive.googleapis.com/overview" target="blank" rel="noopener noreferrer"'
 						);
 						?>
 					</p>

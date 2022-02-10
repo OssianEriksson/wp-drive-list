@@ -70,13 +70,39 @@ class Drive_List_Block {
 	}
 
 	/**
+	 *
+	 */
+	public function render_folder( array $files ) {
+		?>
+		<ul class="wp-drive-list-list">
+			<?php foreach ( $files as $file ) : ?>
+				<li>
+					<?php if ( 'file' === $file['type'] ) : ?>
+						<a href="<?php echo esc_attr( $file['url'] ); ?>">
+							<?php echo esc_html( $file['name'] ); ?>
+						</a>
+					<?php elseif ( 'folder' === $file['type'] ) : ?>
+						<span class="wp-drive-list-folder-name">
+							<?php echo esc_html( $file['name'] ); ?>
+						</span>
+						<?php $this->render_folder( $file['children'] ); ?>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php
+	}
+
+	/**
 	 * Renders block markup
 	 *
 	 * @param array  $attributes Block attributes.
 	 * @param string $content    Block content.
 	 */
 	public function render_block( array $attributes, string $content ): string {
-		$files = isset( $attributes['url'] ) ? $this->list_files_in_drive_folder( $attributes['url'] ) : array();
+		$depth    = max( $attributes['depth'] ?? 1, 1 );
+		$download = $attributes['download'] ?? true;
+		$files    = isset( $attributes['url'] ) ? $this->get_drive_tree( $attributes['url'], $depth, $download ) : array();
 
 		ob_start();
 		if ( empty( $files ) ) {
@@ -86,17 +112,7 @@ class Drive_List_Block {
 			</div>
 			<?php
 		} else {
-			?>
-			<ul>
-				<?php foreach ( $files as $file ) : ?>
-					<li>
-						<a href="<?php echo esc_attr( $file['url'] ); ?>">
-							<?php echo esc_html( $file['name'] ); ?>
-						</a>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-			<?php
+			$this->render_folder( $files );
 		}
 		return ob_get_clean();
 	}
@@ -114,46 +130,93 @@ class Drive_List_Block {
 	/**
 	 * Lists all non-Google native files in a Google Drive folder
 	 *
-	 * @param string $url Shared url to the Google Drive folder.
+	 * @param string $url      Shared url to the Google Drive folder.
+	 * @param int    $depth    Depth to scan.
+	 * @param bool   $download If false, url opens the file in the browser.
 	 */
-	public function list_files_in_drive_folder( string $url ): array {
-		$response = wp_remote_get(
-			add_query_arg(
-				array(
-					'q'   => sprintf(
-						'\'%s\' in parents and not mimeType contains \'application/vnd.google-apps.\'',
-						$this->get_folder_id( $url )
-					),
-					'key' => $this->settings->get( 'api_key' ),
-				),
-				self::APIS_URL . '/drive/v3/files'
+	public function get_drive_tree( string $url, int $depth, bool $download ): array {
+		// phpcs:disable WordPress.WP.AlternativeFunctions
+
+		$tree   = array();
+		$leaves = array(
+			array(
+				'id'   => $this->get_folder_id( $url ),
+				'node' => &$tree,
 			),
-			array()
 		);
 
-		if ( wp_remote_retrieve_response_code( $response ) !== 200 ) {
-			// TODO Some nicer error handling here. This happens e.g. if the
-			// user has not enabled the Google Drive API in Google Console.
-			return array();
+		$curl_multi = curl_multi_init();
+
+		$tree = array();
+		for ( $i = $depth; $i > 0 && $leaves; $i-- ) {
+			$curls = array();
+
+			$leave_count = count( $leaves );
+			for ( $j = 0; $j < $leave_count; $j++ ) {
+				$url = add_query_arg(
+					array(
+						'q'   => rawurlencode( sprintf( '\'%s\' in parents', $leaves[ $j ]['id'] ) ),
+						'key' => rawurlencode( $this->settings->get( 'api_key' ) ),
+					),
+					self::APIS_URL . '/drive/v3/files'
+				);
+
+				$leaves[ $j ]['curl'] = curl_init( $url );
+				curl_setopt( $leaves[ $j ]['curl'], CURLOPT_RETURNTRANSFER, true );
+				curl_multi_add_handle( $curl_multi, $leaves[ $j ]['curl'] );
+			}
+
+			do {
+				$status = curl_multi_exec( $curl_multi, $active );
+				if ( $active ) {
+					curl_multi_select( $curl_multi );
+				}
+			} while ( $active && $status == CURLM_OK );
+
+			$next_leaves = array();
+			for ( $j = 0; $j < $leave_count; $j++ ) {
+				$body = json_decode( curl_multi_getcontent( $leaves[ $j ]['curl'] ), true );
+
+				foreach ( $body['files'] as $file ) {
+					$node_count = count( $leaves[ $j ]['node'] );
+					if ( $i > 1 && 'application/vnd.google-apps.folder' === $file['mimeType'] ) {
+						$leaves[ $j ]['node'][ $node_count ] = array(
+							'type'     => 'folder',
+							'name'     => $file['name'],
+							'children' => array(),
+						);
+
+						$next_leaves[] = array(
+							'id'   => $file['id'],
+							'node' => &$leaves[ $j ]['node'][ $node_count ]['children'],
+						);
+					}
+					if ( ! str_starts_with( $file['mimeType'], 'application/vnd.google-apps.' ) ) {
+						$leaves[ $j ]['node'][ $node_count ] = array(
+							'type' => 'file',
+							'name' => $file['name'],
+							'url'  => add_query_arg(
+								array(
+									'id'     => $file['id'],
+									'export' => 'download',
+								),
+								self::DRIVE_URL . '/uc'
+							) . ( $download ? '' : '?download=false' ),
+						);
+					}
+				}
+
+				curl_multi_remove_handle( $curl_multi, $leaves[ $j ]['curl'] );
+			}
+
+			$leaves = $next_leaves;
 		}
 
-		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+		curl_multi_close( $curl_multi );
 
-		return array_map(
-			function( $file ): array {
-				return array(
-					'url'  => add_query_arg(
-						array(
-							'id'     => $file['id'],
-							'export' => 'download',
-						),
-						self::DRIVE_URL . '/uc'
-					),
-					'name' => $file['name'],
-				);
-			},
-			$body['files']
-		);
+		return $tree;
+
+		// phpcs:enable
 	}
 
 	/**
@@ -162,15 +225,23 @@ class Drive_List_Block {
 	public function rest_api_init(): void {
 		register_rest_route(
 			'wp-drive-list/v1',
-			'/drive/list',
+			'/drive/tree',
 			array(
 				'methods'             => 'GET',
 				'callback'            => function( \WP_REST_Request $request ): array {
-					return $this->list_files_in_drive_folder( $request['url'] );
+					return $this->get_drive_tree( $request['url'], $request['depth'], $request['download'] );
 				},
 				'args'                => array(
-					'url' => array(
+					'url'      => array(
 						'type'     => 'string',
+						'required' => true,
+					),
+					'depth'    => array(
+						'type'     => 'integer',
+						'required' => true,
+					),
+					'download' => array(
+						'type'     => 'boolean',
 						'required' => true,
 					),
 				),

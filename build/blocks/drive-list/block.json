@@ -10,6 +10,12 @@
 	"attributes": {
 		"url": {
 			"type": "string"
+		},
+		"depth": {
+			"type": "integer"
+		},
+		"download": {
+			"type": "boolean"
 		}
 	},
 	"editorScript": "file:../../../build/drive-list-editor.tsx.js",

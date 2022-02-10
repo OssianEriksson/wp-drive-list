@@ -19,22 +19,57 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import { registerBlockType } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, PanelRow, TextControl } from '@wordpress/components';
+import {
+	PanelBody,
+	PanelRow,
+	TextControl,
+	CheckboxControl,
+} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, Children } from '@wordpress/element';
 
 import metadata from './block.json';
 
 type Attributes = {
 	url: string;
+	depth: number;
+	download: boolean;
+};
+
+type Tree = (Folder | File)[];
+
+type Folder = {
+	type: 'folder';
+	name: string;
+	children: Tree;
 };
 
 type File = {
+	type: 'file';
 	name: string;
 	url: string;
 };
 
 const fallbackMsg = __('No files to display', 'wp-drive-list');
+
+const Folder = ({ tree }: { tree: Tree }): JSX.Element => (
+	<ul className="wp-drive-list-list">
+		{tree.map((file, i) => (
+			<li key={`${i}`}>
+				{file.type == 'file' ? (
+					<a href={file.url}>{file.name}</a>
+				) : (
+					<>
+						<span className="wp-drive-list-folder-name">
+							{file.name}
+						</span>
+						<Folder tree={file.children} />
+					</>
+				)}
+			</li>
+		))}
+	</ul>
+);
 
 const Edit = ({
 	attributes,
@@ -43,16 +78,16 @@ const Edit = ({
 	attributes: Attributes;
 	setAttributes: (attr: Attributes) => unknown;
 }): JSX.Element => {
-	const { url } = attributes;
+	const { url = '', depth = 1, download = true } = attributes;
 
-	const [files, setFiles] = useState([]);
+	const [tree, setTree] = useState<Tree>([]);
 	useEffect(() => {
-		apiFetch({ path: `wp-drive-list/v1/drive/list?url=${url}` }).then(
-			(response) => {
-				setFiles(response as File[]);
-			}
-		);
-	}, [url]);
+		apiFetch({
+			path: `wp-drive-list/v1/drive/tree?url=${url}&depth=${depth}&download=${download}`,
+		}).then((response) => {
+			setTree(response as Tree);
+		});
+	}, [url, depth, download]);
 
 	return (
 		<div {...useBlockProps()}>
@@ -64,7 +99,7 @@ const Edit = ({
 					<PanelRow>
 						<TextControl
 							label={__('Shared folder URL', 'wp-drive-list')}
-							value={url || ''}
+							value={url}
 							placeholder="https://drive.google.com/drive/folders/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 							onChange={(value: string) => {
 								setAttributes({
@@ -74,16 +109,44 @@ const Edit = ({
 							}}
 						/>
 					</PanelRow>
+					<PanelRow>
+						<TextControl
+							label={__('Scan depth', 'wp-drive-list')}
+							help={__(
+								'Number of subfolders to scan',
+								'wp-drive-list'
+							)}
+							value={depth}
+							type="number"
+							min="1"
+							onChange={(value: any) => {
+								setAttributes({
+									...attributes,
+									depth: parseInt(value),
+								});
+							}}
+						/>
+					</PanelRow>
+					<PanelRow>
+						<CheckboxControl
+							label={__('Download files', 'wp-drive-list')}
+							help={__(
+								'Download files or open in browser',
+								'wp-drive-list'
+							)}
+							checked={download}
+							onChange={(value: boolean) => {
+								setAttributes({
+									...attributes,
+									download: value,
+								});
+							}}
+						/>
+					</PanelRow>
 				</PanelBody>
 			</InspectorControls>
-			{files.length > 0 ? (
-				<ul>
-					{files.map((file, i) => (
-						<li key={`${i}`}>
-							<a href={file.url}>{file.name}</a>
-						</li>
-					))}
-				</ul>
+			{tree.length > 0 ? (
+				<Folder tree={tree} />
 			) : (
 				<div>{fallbackMsg}</div>
 			)}

@@ -18,5 +18,12 @@
 			"type": "boolean"
 		}
 	},
+	"example": {
+		"attributes": {
+			"url": "https://drive.google.com/drive/u/1/folders/1bDlz9paOUv-YgEBc1DtLqiPmCrKAnVmO",
+			"depth": 2,
+			"download": true
+		}
+	},
 	"editorScript": "file:./editor.js"
 }

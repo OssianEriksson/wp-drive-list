@@ -111,25 +111,7 @@ class Settings {
 	 * Enqueues scripts and styles needed on the settings page
 	 */
 	public function enqueue_settings_page_scripts(): void {
-		$asset = require PLUGIN_ROOT . '/build/settings.tsx.asset.php';
-		wp_enqueue_style(
-			'wp-drive-list-settings',
-			plugins_url( '/build/settings.tsx.css', PLUGIN_FILE ),
-			array( 'wp-components' ),
-			$asset['version']
-		);
-		wp_enqueue_script(
-			'wp-drive-list-settings',
-			plugins_url( '/build/settings.tsx.js', PLUGIN_FILE ),
-			$asset['dependencies'],
-			$asset['version'],
-			true
-		);
-		wp_set_script_translations(
-			'wp-drive-list-settings',
-			'wp-drive-list',
-			PLUGIN_ROOT . '/languages'
-		);
+		enqueue_entrypoint_script( 'wp-drive-list-settings', 'settings.tsx' );
 	}
 
 	/**

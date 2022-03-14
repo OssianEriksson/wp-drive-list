@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Drive List 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-drive-list\n"
-"POT-Creation-Date: 2022-02-10T20:31:14+00:00\n"
+"POT-Creation-Date: 2022-03-14T12:36:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ossian Eriksson\n"
 "Language-Team: Svenska\n"
@@ -31,21 +31,21 @@ msgstr ""
 msgid "https://github.com/OssianEriksson"
 msgstr ""
 
-#: includes/class-drive-list-block.php:111 build/drive-list-editor.tsx.js:1
+#: includes/class-drive-list-block.php:113 build/blocks/drive-list/editor.js:1
 msgid "No files to display"
 msgstr "Inga filer att visa"
 
 #: includes/class-settings.php:87 includes/class-settings.php:88
-#: build/settings.tsx.js:1
+#: build/entrypoints/settings.tsx.js:1
 msgid "WP Drive List Settings"
 msgstr "Inställningar för WP Drivelista"
 
-#: includes/class-settings.php:142
+#: includes/class-settings.php:124
 msgid "API key"
 msgstr "API-nyckel"
 
 #. translators: %1$s, %2$s and %3$s are replaced with anchor attributes.
-#: includes/class-settings.php:150
+#: includes/class-settings.php:132
 msgid ""
 "This plugin requires an API key from Google in order to function. "
 "Instructions for creating an API key as a Google Workspace admin are "
@@ -59,47 +59,47 @@ msgstr ""
 "kan <a %2$s>säkra din API-nyckel</a>. Se sedan till att <a %3$s>slå på "
 "Google-API:t</a> för ditt projekt."
 
-#: includes/class-settings.php:178
+#: includes/class-settings.php:160
 msgid "Settings"
 msgstr "Inställningar"
 
-#: build/drive-list-editor.tsx.js:1
+#: build/blocks/drive-list/editor.js:1
 msgid "Basic settings"
 msgstr "Grundläggande inställningar"
 
-#: build/drive-list-editor.tsx.js:1
+#: build/blocks/drive-list/editor.js:1
 msgid "Shared folder URL"
 msgstr "URL till delad mapp"
 
-#: build/drive-list-editor.tsx.js:1
+#: build/blocks/drive-list/editor.js:1
 msgid "Scan depth"
 msgstr "Skanningsdjup"
 
-#: build/drive-list-editor.tsx.js:1
+#: build/blocks/drive-list/editor.js:1
 msgid "Number of subfolders to scan"
 msgstr "Antalet undermappar att skanna"
 
-#: build/drive-list-editor.tsx.js:1
+#: build/blocks/drive-list/editor.js:1
 msgid "Download files"
 msgstr "Ladda ned filer"
 
-#: build/drive-list-editor.tsx.js:1
+#: build/blocks/drive-list/editor.js:1
 msgid "Download files or open in browser"
 msgstr "Ladda ned filer eller öppna dem i webbläsaren"
 
-#: build/settings.tsx.js:1
+#: build/entrypoints/settings.tsx.js:1
 msgid "The following error has occurred:"
 msgstr "Följande fel har inträffat:"
 
-#: build/settings.tsx.js:1
+#: build/entrypoints/settings.tsx.js:1
 msgid "Google API key"
 msgstr "Google API-nyckel"
 
-#: build/settings.tsx.js:1
+#: build/entrypoints/settings.tsx.js:1
 msgid "Settings saved."
 msgstr "Inställningarna sparade."
 
-#: build/settings.tsx.js:1
+#: build/entrypoints/settings.tsx.js:1
 msgid "Save changes"
 msgstr "Spara ändringar"
 

@@ -18,6 +18,5 @@
 			"type": "boolean"
 		}
 	},
-	"editorScript": "file:../../../build/drive-list-editor.tsx.js",
-	"editorStyle": "file:../../../build/drive-list-editor.tsx.css"
+	"editorScript": "file:./editor.js"
 }

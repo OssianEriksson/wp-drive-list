@@ -46,10 +46,22 @@ class Drive_List_Block {
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
 
-		if ( $this->settings->get( 'api_key' ) ) {
-			add_action( 'init', array( $this, 'register_block' ) );
-			add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
-		}
+		add_action(
+			'init',
+			function(): void {
+				if ( $this->settings->get( 'api_key' ) ) {
+					$this->register_block();
+				}
+			}
+		);
+		add_action(
+			'rest_api_init',
+			function(): void {
+				if ( $this->settings->get( 'api_key' ) ) {
+					$this->rest_api_init();
+				}
+			}
+		);
 	}
 
 	/**
@@ -57,7 +69,7 @@ class Drive_List_Block {
 	 */
 	public function register_block(): void {
 		register_block_type_from_metadata(
-			PLUGIN_ROOT . '/src/blocks/drive-list',
+			PLUGIN_ROOT . '/build/blocks/drive-list',
 			array(
 				'render_callback' => array( $this, 'render_block' ),
 			)
@@ -70,7 +82,9 @@ class Drive_List_Block {
 	}
 
 	/**
+	 * Renders markup displaying a list of files
 	 *
+	 * @param array $files List of files to display.
 	 */
 	public function render_folder( array $files ) {
 		?>
@@ -171,7 +185,7 @@ class Drive_List_Block {
 				if ( $active ) {
 					curl_multi_select( $curl_multi );
 				}
-			} while ( $active && $status == CURLM_OK );
+			} while ( $active && CURLM_OK === $status );
 
 			$next_leaves = array();
 			for ( $j = 0; $j < $leave_count; $j++ ) {

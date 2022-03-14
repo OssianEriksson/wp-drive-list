@@ -32,77 +32,59 @@
 
 namespace Ftek\WPDriveList;
 
-if ( ! defined( 'WPINC' ) ) {
-	exit;
-}
-
 require_once __DIR__ . '/vendor/autoload.php';
+
 
 define( __NAMESPACE__ . '\PLUGIN_FILE', __FILE__ );
 define( __NAMESPACE__ . '\PLUGIN_ROOT', dirname( PLUGIN_FILE ) );
 
-/**
- * Checks if $haystack starts with $needle
- *
- * @param string $haystack String to search.
- * @param string $needle   String to look for.
- */
-function str_starts_with( string $haystack, string $needle ): bool {
-	return substr( $haystack, 0, strlen( $needle ) ) === $needle;
-}
 
 /**
- * Resolves a path by expanding ../ and ./
+ * Enqueue an entrypoint script
  *
- * Borrowed from https://www.php.net/manual/en/function.realpath.php#84012
- *
- * @param string $path File path.
+ * @param string $handle Script and style handle.
+ * @param string $src    Name of a file inside src/entrypoints.
  */
-function resolve_path( string $path ): string {
-	$path     = str_replace( '\\', '/', $path );
-	$parts    = array_filter( explode( '/', $path ), 'strlen' );
-	$resolved = array();
-	foreach ( $parts as $part ) {
-		if ( '..' === $part ) {
-			array_pop( $resolved );
-		} elseif ( '.' !== $part ) {
-			$resolved[] = $part;
-		}
+function enqueue_entrypoint_script( string $handle, string $src ): void {
+	$exploded = explode( '.js', $src );
+	if ( empty( $exploded[ count( $exploded ) - 1 ] ) ) {
+		array_pop( $exploded );
+		$src = implode( '.js', $src );
 	}
-	$initial_slash = str_starts_with( $path, '/' ) ? '/' : '';
-	return $initial_slash . implode( '/', $resolved );
+
+	$base_path = '/build/entrypoints/' . $src;
+
+	$asset = require PLUGIN_ROOT . $base_path . '.asset.php';
+	if ( file_exists( PLUGIN_ROOT . $base_path . '.css' ) ) {
+		wp_enqueue_style(
+			$handle,
+			plugins_url( $base_path . '.css', PLUGIN_FILE ),
+			in_array( 'wp-components', $asset['dependencies'], true ) ? array( 'wp-components' ) : array(),
+			$asset['version']
+		);
+	}
+	wp_enqueue_script(
+		$handle,
+		plugins_url( $base_path . '.js', PLUGIN_FILE ),
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+	wp_set_script_translations(
+		$handle,
+		'wp-drive-list',
+		PLUGIN_ROOT . '/languages'
+	);
 }
 
-/**
- * Loads the plugin's translated strings
- */
-function load_translations() {
-	$plugin_rel_path = plugin_basename( PLUGIN_ROOT ) . '/languages';
-	load_plugin_textdomain( 'wp-drive-list', false, $plugin_rel_path );
-}
 
-add_action( 'init', __NAMESPACE__ . '\load_translations' );
-
-/*
-This is neccessary since i18n translations of JavaScript is done by finding
-the JED (.json) file in languages/ whose basename suffix matches the md5
-md5. This works fine for most scripts, but as of right now not for the scripts
-enqueued by WordPress as part of parsing the block.json files. For example
-
-```
---- src/block.json ---
-{
-	...
-	"editorScript": "file:../build/myScript.js"
-	...
-}
-```
-
-would cause the entirety of `src/../builds/myScript.js` to get hashed instead
-of just `builds/myScript.js` which is what `wp i18n make-json` generates md5
-hashes for.
-*/
-add_filter( 'load_script_textdomain_relative_path', __NAMESPACE__ . '\resolve_path' );
+add_action(
+	'init',
+	function(): void {
+		$plugin_rel_path = plugin_basename( dirname( PLUGIN_FILE ) ) . '/languages';
+		load_plugin_textdomain( 'wp-drive-list', false, $plugin_rel_path );
+	}
+);
 
 $settings   = new Settings();
 $drive_list = new Drive_List_Block( $settings );

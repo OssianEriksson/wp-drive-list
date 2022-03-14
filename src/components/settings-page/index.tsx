@@ -29,7 +29,7 @@ import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 
-import './settings.scss';
+import './index.scss';
 
 type Option = {
 	api_key: string;
@@ -130,9 +130,4 @@ const SettingsPage = (): JSX.Element => (
 	</>
 );
 
-document.addEventListener('DOMContentLoaded', () => {
-	const root = document.getElementById('wp_drive_list_settings');
-	if (root) {
-		render(<SettingsPage />, root);
-	}
-});
+export default SettingsPage;

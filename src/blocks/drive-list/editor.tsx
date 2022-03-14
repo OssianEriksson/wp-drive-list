@@ -56,7 +56,7 @@ const Folder = ({ tree }: { tree: Tree }): JSX.Element => (
 	<ul className="wp-drive-list-list">
 		{tree.map((file, i) => (
 			<li key={`${i}`}>
-				{file.type == 'file' ? (
+				{file.type === 'file' ? (
 					<a href={file.url}>{file.name}</a>
 				) : (
 					<>

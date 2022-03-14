@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Drive List 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-drive-list\n"
-"POT-Creation-Date: 2022-03-14T12:36:33+00:00\n"
+"POT-Creation-Date: 2022-03-14T13:47:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Ossian Eriksson\n"
 "Language-Team: Svenska\n"
@@ -35,17 +35,17 @@ msgstr ""
 msgid "No files to display"
 msgstr "Inga filer att visa"
 
-#: includes/class-settings.php:87 includes/class-settings.php:88
+#: includes/class-settings.php:88 includes/class-settings.php:89
 #: build/entrypoints/settings.tsx.js:1
 msgid "WP Drive List Settings"
 msgstr "Inställningar för WP Drivelista"
 
-#: includes/class-settings.php:124
+#: includes/class-settings.php:125
 msgid "API key"
 msgstr "API-nyckel"
 
 #. translators: %1$s, %2$s and %3$s are replaced with anchor attributes.
-#: includes/class-settings.php:132
+#: includes/class-settings.php:133
 msgid ""
 "This plugin requires an API key from Google in order to function. "
 "Instructions for creating an API key as a Google Workspace admin are "
@@ -59,7 +59,7 @@ msgstr ""
 "kan <a %2$s>säkra din API-nyckel</a>. Se sedan till att <a %3$s>slå på "
 "Google-API:t</a> för ditt projekt."
 
-#: includes/class-settings.php:160
+#: includes/class-settings.php:161
 msgid "Settings"
 msgstr "Inställningar"
 

@@ -46,22 +46,10 @@ class Drive_List_Block {
 	public function __construct( Settings $settings ) {
 		$this->settings = $settings;
 
-		add_action(
-			'init',
-			function(): void {
-				if ( $this->settings->get( 'api_key' ) ) {
-					$this->register_block();
-				}
-			}
-		);
-		add_action(
-			'rest_api_init',
-			function(): void {
-				if ( $this->settings->get( 'api_key' ) ) {
-					$this->rest_api_init();
-				}
-			}
-		);
+		if ( $this->settings->get( 'api_key' ) ) {
+			add_action( 'init', array( $this, 'register_block' ) );
+			add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
+		}
 	}
 
 	/**

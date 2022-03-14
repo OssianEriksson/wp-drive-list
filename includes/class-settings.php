@@ -74,7 +74,8 @@ class Settings {
 	 *                     setting array.
 	 */
 	public function get( ?string $key ) {
-		$option = array_merge( self::DEFAULT_SETTINGS, get_option( 'wp_drive_list_option' ) );
+		$option = get_option( 'wp_drive_list_option' );
+		$option = array_merge( self::DEFAULT_SETTINGS, $option ? $option : array() );
 		return null === $key ? $option : $option[ $key ];
 	}
 

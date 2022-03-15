@@ -56,7 +56,7 @@ class Drive_List_Block {
 	 * Registers the block
 	 */
 	public function register_block(): void {
-		register_block_type_from_metadata(
+		register_block_type(
 			PLUGIN_ROOT . '/build/blocks/drive-list',
 			array(
 				'render_callback' => array( $this, 'render_block' ),

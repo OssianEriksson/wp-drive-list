@@ -96,4 +96,4 @@ function clean() {
 	Settings::clean();
 }
 
-register_uninstall_hook( PLUGIN_FILE, 'clean' );
+register_uninstall_hook( PLUGIN_FILE, __NAMESPACE__ . '\clean' );

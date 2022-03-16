@@ -123,11 +123,11 @@ const SettingsContent = (): JSX.Element => {
 };
 
 const SettingsPage = (): JSX.Element => (
-	<>
+	<div className="wp-drive-list-settings">
 		<h1>{__('WP Drive List Settings', 'wp-drive-list')}</h1>
 		<SettingsContent />
 		<NoticeBar />
-	</>
+	</div>
 );
 
 export default SettingsPage;

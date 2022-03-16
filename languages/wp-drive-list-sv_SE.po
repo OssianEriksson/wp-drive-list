@@ -21,7 +21,7 @@ msgstr "WP Drivelista"
 
 #. Description of the plugin
 msgid "WordPress plugin for listing files in a shared Google Drive folder."
-msgstr "WordPressplugin för att lista filer i en delad Google Drive-mapp."
+msgstr "WordPress-plugin för att lista filer i en delad Google Drive-mapp."
 
 #. Author of the plugin
 msgid "Ossian Eriksson"

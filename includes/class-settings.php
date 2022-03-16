@@ -91,7 +91,7 @@ class Settings {
 			'wp_drive_list_settings',
 			function(): void {
 				?>
-				<div id="wp_drive_list_settings" class="wrap"></div>
+				<div id="wp-drive-list-settings" class="wrap"></div>
 				<?php
 			}
 		);

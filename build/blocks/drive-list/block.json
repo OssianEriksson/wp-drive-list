@@ -2,7 +2,7 @@
 	"apiVersion": 2,
 	"name": "wp-drive-list/drive-list",
 	"title": "Drive list",
-	"category": "text",
+	"category": "media",
 	"description": "Lists files in a shared Google Drive folder",
 	"keywords": ["drive", "google", "file"],
 	"icon": "list-view",
@@ -25,5 +25,5 @@
 			"download": true
 		}
 	},
-	"editorScript": "file:./editor.js"
+	"editorScript": "file:editor.js"
 }

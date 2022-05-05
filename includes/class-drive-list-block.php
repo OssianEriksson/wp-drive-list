@@ -2,26 +2,10 @@
 /**
  * Handles the drive-list Gutenberg block
  *
- * WP Drive List
- * Copyright (C) 2022  Ossian Eriksson
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * @package ftek/wp-drive-list
+ * @package ftek/ftek-drive-list
  */
 
-namespace Ftek\WPDriveList;
+namespace Ftek\DriveList;
 
 /**
  * Handles the drive-list Gutenberg block
@@ -63,8 +47,8 @@ class Drive_List_Block {
 			)
 		);
 		wp_set_script_translations(
-			'wp-drive-list-drive-list-editor-script',
-			'wp-drive-list',
+			'ftek-drive-list-drive-list-editor-script',
+			'ftek-drive-list',
 			PLUGIN_ROOT . '/languages'
 		);
 	}
@@ -76,7 +60,7 @@ class Drive_List_Block {
 	 */
 	public function render_folder( array $files ) {
 		?>
-		<ul class="wp-drive-list-list">
+		<ul class="ftek-drive-list-list">
 			<?php foreach ( $files as $file ) : ?>
 				<li>
 					<?php if ( 'file' === $file['type'] ) : ?>
@@ -84,7 +68,7 @@ class Drive_List_Block {
 							<?php echo esc_html( $file['name'] ); ?>
 						</a>
 					<?php elseif ( 'folder' === $file['type'] ) : ?>
-						<span class="wp-drive-list-folder-name">
+						<span class="ftek-drive-list-folder-name">
 							<?php echo esc_html( $file['name'] ); ?>
 						</span>
 						<?php $this->render_folder( $file['children'] ); ?>
@@ -110,7 +94,7 @@ class Drive_List_Block {
 		if ( empty( $files ) ) {
 			?>
 			<div>
-				<?php esc_html_e( 'No files to display', 'wp-drive-list' ); ?>
+				<?php esc_html_e( 'No files to display', 'ftek-drive-list' ); ?>
 			</div>
 			<?php
 		} else {
@@ -226,7 +210,7 @@ class Drive_List_Block {
 	 */
 	public function rest_api_init(): void {
 		register_rest_route(
-			'wp-drive-list/v1',
+			'ftek-drive-list/v1',
 			'/drive/tree',
 			array(
 				'methods'             => 'GET',

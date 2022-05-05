@@ -1,36 +1,18 @@
 <?php
 /**
- * Main plugin file
+ * Plugin Name:     Ftek Drive List
+ * Plugin URI:      https://github.com/fysikteknologsektionen/ftek-drive-list
+ * Description:     GitHub template for a WordPress plugin
+ * Author:          Ossian Eriksson
+ * Author URI:      https://github.com/OssianEriksson
+ * Text Domain:     ftek-drive-list
+ * Domain Path:     /languages
+ * Version:         0.2.0
  *
- * WP Drive List
- * Copyright (C) 2022  Ossian Eriksson
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Plugin Name: WP Drive List
- * Description: WordPress plugin for listing files in a shared Google Drive folder.
- * Version: 1.0.0
- * Text Domain: wp-drive-list
- * Domain Path: /languages
- * Author: Ossian Eriksson
- * Author URI: https://github.com/OssianEriksson
- * Licence: GLP-3.0
- *
- * @package ftek/wp-drive-list
+ * @package ftek\ftek-drive-list
  */
 
-namespace Ftek\WPDriveList;
+namespace Ftek\DriveList;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -52,7 +34,7 @@ function enqueue_entrypoint_script( string $handle, string $src ): void {
 		$src = implode( '.js', $src );
 	}
 
-	$base_path = '/build/entrypoints/' . $src;
+	$base_path = '/build/' . $src;
 
 	$asset = require PLUGIN_ROOT . $base_path . '.asset.php';
 	if ( file_exists( PLUGIN_ROOT . $base_path . '.css' ) ) {
@@ -72,7 +54,7 @@ function enqueue_entrypoint_script( string $handle, string $src ): void {
 	);
 	wp_set_script_translations(
 		$handle,
-		'wp-drive-list',
+		'ftek-drive-list',
 		PLUGIN_ROOT . '/languages'
 	);
 }
@@ -82,7 +64,7 @@ add_action(
 	'init',
 	function(): void {
 		$plugin_rel_path = plugin_basename( dirname( PLUGIN_FILE ) ) . '/languages';
-		load_plugin_textdomain( 'wp-drive-list', false, $plugin_rel_path );
+		load_plugin_textdomain( 'ftek-drive-list', false, $plugin_rel_path );
 	}
 );
 

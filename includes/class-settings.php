@@ -2,26 +2,10 @@
 /**
  * Handles plugin settings
  *
- * WP Drive List
- * Copyright (C) 2022  Ossian Eriksson
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * @package ftek/wp-drive-list
+ * @package ftek/ftek-drive-list
  */
 
-namespace Ftek\WPDriveList;
+namespace Ftek\DriveList;
 
 /**
  * Handles plugin settings
@@ -38,7 +22,7 @@ class Settings {
 	public function __construct() {
 		add_action( 'init', array( $this, 'add_settings' ) );
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
-		add_filter( 'plugin_action_links_wp-drive-list/wp-drive-list.php', array( $this, 'add_settings_action_link' ) );
+		add_filter( 'plugin_action_links_ftek-drive-list/ftek-drive-list.php', array( $this, 'add_settings_action_link' ) );
 	}
 
 	/**
@@ -85,13 +69,13 @@ class Settings {
 	public function add_settings_page(): void {
 		$settings_page = add_submenu_page(
 			null,
-			__( 'WP Drive List Settings', 'wp-drive-list' ),
-			__( 'WP Drive List Settings', 'wp-drive-list' ),
+			__( 'Ftek Drive List Settings', 'ftek-drive-list' ),
+			__( 'Ftek Drive List Settings', 'ftek-drive-list' ),
 			'manage_options',
 			'wp_drive_list_settings',
 			function(): void {
 				?>
-				<div id="wp-drive-list-settings" class="wrap"></div>
+				<div id="ftek-drive-list-settings" class="wrap"></div>
 				<?php
 			}
 		);
@@ -112,7 +96,7 @@ class Settings {
 	 * Enqueues scripts and styles needed on the settings page
 	 */
 	public function enqueue_settings_page_scripts(): void {
-		enqueue_entrypoint_script( 'wp-drive-list-settings', 'settings.tsx' );
+		enqueue_entrypoint_script( 'ftek-drive-list-settings', 'settings.tsx' );
 	}
 
 	/**
@@ -122,7 +106,7 @@ class Settings {
 		$screen = get_current_screen();
 		$screen->add_help_tab(
 			array(
-				'title'    => __( 'API key', 'wp-drive-list' ),
+				'title'    => __( 'API key', 'ftek-drive-list' ),
 				'id'       => 'wp_drive_list_help_tab_api_key',
 				'callback' => function(): void {
 					?>
@@ -130,7 +114,7 @@ class Settings {
 						<?php
 						printf(
 							// translators: %1$s, %2$s and %3$s are replaced with anchor attributes.
-							__( 'This plugin requires an API key from Google in order to function. Instructions for creating an API key as a Google Workspace admin are available in <a %1$s>Google\'s documentation</a>. Also read about <a %2$s>securing your API key</a>. Then make sure to <a %3$s>enable the Google Drive API</a> for your project.', 'wp-drive-list' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							__( 'This plugin requires an API key from Google in order to function. Instructions for creating an API key as a Google Workspace admin are available in <a %1$s>Google\'s documentation</a>. Also read about <a %2$s>securing your API key</a>. Then make sure to <a %3$s>enable the Google Drive API</a> for your project.', 'ftek-drive-list' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							'href="https://cloud.google.com/docs/authentication/api-keys#creating_an_api_key" target="blank" rel="noopener noreferrer"',
 							'href="https://cloud.google.com/docs/authentication/api-keys#securing_an_api_key" target="blank" rel="noopener noreferrer"',
 							'href="https://console.developers.google.com/apis/api/drive.googleapis.com/overview" target="blank" rel="noopener noreferrer"'
@@ -158,7 +142,7 @@ class Settings {
 		ob_start();
 		?>
 		<a href="<?php echo esc_attr( $url ); ?>">
-			<?php esc_html_e( 'Settings', 'wp-drive-list' ); ?>
+			<?php esc_html_e( 'Settings', 'ftek-drive-list' ); ?>
 		</a>
 		<?php
 		$actions[] = ob_get_clean();

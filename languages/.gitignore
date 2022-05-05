@@ -1,1 +1,3 @@
-wp-drive-list.pot
+*.pot
+*.mo
+*.json

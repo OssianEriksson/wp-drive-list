@@ -1,22 +1,4 @@
-/*
-WP Drive List
-Copyright (C) 2022  Ossian Eriksson
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-import { render, useState, useEffect } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import {
 	Placeholder,
 	Spinner,
@@ -29,7 +11,7 @@ import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 
-import './index.scss';
+import styles from './index.module.scss';
 
 type Option = {
 	api_key: string;
@@ -41,8 +23,8 @@ type SettingsObject = {
 
 const ErrorDisplay = (error: any): JSX.Element => (
 	<>
-		{__('The following error has occurred:', 'wp-drive-list')}
-		<pre className="error">{JSON.stringify(error, null, 4)}</pre>
+		{__('The following error has occurred:', 'ftek-drive-list')}
+		<pre className={styles.error}>{JSON.stringify(error, null, 4)}</pre>
 	</>
 );
 
@@ -56,7 +38,7 @@ const NoticeBar = (): JSX.Element => {
 
 const SpinnerPlaceholder = (): JSX.Element => (
 	<Placeholder>
-		<div className="placeholder-center">
+		<div className={styles['placeholder-center']}>
 			<Spinner />
 		</div>
 	</Placeholder>
@@ -93,7 +75,7 @@ const SettingsContent = (): JSX.Element => {
 			.then(() =>
 				createNotice(
 					'success',
-					__('Settings saved.', 'wp-drive-list'),
+					__('Settings saved.', 'ftek-drive-list'),
 					{ type: 'snackbar' }
 				)
 			)
@@ -109,22 +91,22 @@ const SettingsContent = (): JSX.Element => {
 	return (
 		<>
 			<TextControl
-				label={__('Google API key', 'wp-drive-list')}
+				label={__('Google API key', 'ftek-drive-list')}
 				value={option.api_key}
 				onChange={(value: string) =>
 					setOption({ ...option, api_key: value })
 				}
 			/>
 			<Button onClick={save} isPrimary>
-				{__('Save changes', 'wp-drive-list')}
+				{__('Save changes', 'ftek-drive-list')}
 			</Button>
 		</>
 	);
 };
 
 const SettingsPage = (): JSX.Element => (
-	<div className="wp-drive-list-settings">
-		<h1>{__('WP Drive List Settings', 'wp-drive-list')}</h1>
+	<div>
+		<h1>{__('Ftek Drive List Settings', 'ftek-drive-list')}</h1>
 		<SettingsContent />
 		<NoticeBar />
 	</div>

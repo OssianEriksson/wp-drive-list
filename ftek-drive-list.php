@@ -2,7 +2,7 @@
 /**
  * Plugin Name:     Ftek Drive List
  * Plugin URI:      https://github.com/fysikteknologsektionen/ftek-drive-list
- * Description:     GitHub template for a WordPress plugin
+ * Description:     WordPress plugin for listing files in a shared Google Drive folder
  * Author:          Ossian Eriksson
  * Author URI:      https://github.com/OssianEriksson
  * Text Domain:     ftek-drive-list
